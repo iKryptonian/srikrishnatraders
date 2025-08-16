@@ -153,7 +153,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             <span style={{ fontWeight: 900 }}>Place Order</span>
           </button>
           <p className="text-center font-semibold text-lg text-green-700 mt-2">
-          Download the Invoice and send via WhatsApp
+            Invoice downloads automatically.
           </p>
         </div>
       </form>
