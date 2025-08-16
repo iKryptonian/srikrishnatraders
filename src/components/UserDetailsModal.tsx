@@ -22,18 +22,34 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     city: '',
     pincode: '',
     address: '',
-    state: 'TamilNadu'
+    state: 'Tamil Nadu' // Changed default value and format
   });
 
   const [showMinOrderError, setShowMinOrderError] = useState(false);
+  const [showAreaError, setShowAreaError] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    onSubmit(details);
+
+    // Validation: Allow orders only if
+    // state is Tamil Nadu, OR Andhra with city or address containing "guntur" (case-insensitive)
+    const normalizedCity = details.city.trim().toLowerCase();
+    const normalizedAddress = details.address.trim().toLowerCase();
+    if (
+      details.state === 'Tamil Nadu' ||
+      (
+        details.state === 'Andhra' && 
+        (normalizedCity.includes('guntur') || normalizedAddress.includes('guntur'))
+      )
+    ) {
+      setShowAreaError(false);
+      onSubmit(details);
+    } else {
+      setShowAreaError(true);
+    }
   };
 
-  return ( 
+  return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
@@ -51,6 +67,12 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
       {showMinOrderError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           <p>Minimum order value should be ₹2,500. Please add more items to continue.</p>
+        </div>
+      )}
+
+      {showAreaError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          We are only accepting orders for Tamil Nadu and Guntur, Andhra.
         </div>
       )}
 
@@ -84,22 +106,6 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
           />
         </div>
 
-        
-
-        {/*<div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-            Address
-          </label>
-          <textarea
-            id="address"
-            required
-            rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-300 text-black shadow-sm focus:border-purple-500 focus:ring-purple-500"
-            value={details.address}
-            onChange={(e) => setDetails({ ...details, address: e.target.value })}
-          />
-        </div>*/}
-
         <div>
           <label htmlFor="city" className="block text-sm font-medium text-gray-700">
             Town/City Name
@@ -129,17 +135,37 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
           />
         </div>
 
+        {/*  
+        <div>
+          <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+            Address
+          </label>
+          <textarea
+            id="address"
+            required
+            rows={3}
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-300 text-black shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            value={details.address}
+            onChange={(e) => setDetails({ ...details, address: e.target.value })}
+          />
+        </div>
+        */}
+
+        {/* Changed state input to dropdown select */}
         <div>
           <label htmlFor="state" className="block text-sm font-medium text-gray-700">
             State
           </label>
-          <input
-            type="text"
+          <select
             id="state"
-            value="TamilNadu"
-            disabled
+            required
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-300 text-black shadow-sm focus:border-purple-500 h-8 focus:ring-purple-500"
-          />
+            value={details.state}
+            onChange={(e) => setDetails({ ...details, state: e.target.value })}
+          >
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Andhra">Andhra</option>
+          </select>
         </div>
 
         <div className="pt-4">

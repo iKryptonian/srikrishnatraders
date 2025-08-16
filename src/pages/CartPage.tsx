@@ -41,7 +41,7 @@ export const CartPage: React.FC<CartPageProps> = ({ cart, onRemoveFromCart }) =>
 
     // Generate and save PDF
     const blob = await pdf(doc).toBlob();
-    saveAs(blob, `Invoice_${details.name}_${details.city}`.replace(/\s+/g, '') + '.pdf');
+    saveAs(blob, `Invoice_${details.name}`.replace(/\s+/g, '') + '.pdf');
 
 
     // Show WhatsApp popup
